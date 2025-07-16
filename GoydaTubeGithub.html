@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goyda Tube - Российский видеохостинг</title>
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --primary-dark: #cc0000;
+            --secondary-color: #065fd4;
+            --text-dark: #030303;
+            --text-medium: #606060;
+            --text-light: #909090;
+            --bg-dark: #181818;
+            --bg-medium: #212121;
+            --bg-light: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --goyda-gradient: linear-gradient(45deg, #ff0000, #0039A6, #D52B1E);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 20px;
+            background: var(--goyda-gradient);
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            transition: var(--transition);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::after {
+            content: "ГОЙДА";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 2px black;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-dark);
+            transition: var(--transition);
+            background: var(--goyda-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .logo:hover .logo-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .logo:hover span {
+            background: linear-gradient(45deg, #D52B1E, #0039A6, #ff0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        .search-bar {
+            display: flex;
+            flex-grow: 0.6;
+            margin: 0 20px;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px 0 0 20px;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+            background-color: rgba(255, 0, 0, 0.05);
+        }
+        
+        .search-bar input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+        
+        .search-bar input::placeholder {
+            color: var(--text-medium);
+            opacity: 0.7;
+        }
+        
+        .search-bar button {
+            padding: 0 20px;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-radius: 0 20px 20px 0;
+            background: var(--goyda-gradient);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-bar button:hover {
+            background: linear-gradient(45deg, #D52B1E, #0039A6, #ff0000);
+            transform: scale(1.05);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-actions i {
+            font-size: 20px;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .user-actions i:hover {
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            background: var(--goyda-gradient);
+            padding: 2px;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--primary-color);
+            border-color: white;
+        }
+        
+        .goyda-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--goyda-gradient);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Основное содержимое */
+        .container {
+            display: flex;
+            flex: 1;
+        }
+        
+        /* Боковая панель */
+        .sidebar {
+            width: 240px;
+            padding: 20px 0;
+            background-color: var(--white);
+            height: calc(100vh - 70px);
+            position: sticky;
+            top: 70px;
+            overflow-y: auto;
+            transition: var(--transition);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+        
+        .sidebar-item i {
+            margin-right: 20px;
+            font-size: 18px;
+            color: var(--text-medium);
+            transition: var(--transition);
+        }
+        
+        .sidebar-item:hover i {
+            color: var(--primary-color);
+        }
+        
+        .sidebar-item.active i {
+            color: var(--primary-color);
+        }
+        
+        .sidebar-item span {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .sidebar-item.active::after {
+            content: "ГОЙДА!";
+            position: absolute;
+            right: 15px;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--primary-color);
+            animation: bounce 0.5s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-3px); }
+        }
+        
+        .sidebar hr {
+            border: none;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+        
+        .sidebar h4 {
+            padding: 10px 25px;
+            color: var(--text-medium);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        
+        .sidebar h4::before {
+            content: "ГОЙДА";
+            position: absolute;
+            right: 25px;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+        
+        /* Основная область с видео */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--bg-light);
+            position: relative;
+        }
+        
+        .main-content::before {
+            content: "GOYDA TUBE";
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 72px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.03);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .categories {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            gap: 10px;
+            scrollbar-width: thin;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .categories::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .categories::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        .category {
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .category.active {
+            background: var(--goyda-gradient);
+            color: var(--white);
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category.active::after {
+            content: "!";
+            position: absolute;
+            right: 8px;
+            font-weight: bold;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .video-card::before {
+            content: "ГОЙДА";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+            z-index: 2;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .video-card:hover::before {
+            opacity: 1;
+        }
+        
+        .thumbnail {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            border-radius: 10px;
+            transition: var(--transition);
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .video-card:hover .thumbnail img {
+            transform: scale(1.03);
+        }
+        
+        .thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.7));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1;
+            border-radius: 10px;
+        }
+        
+        .video-card:hover .thumbnail::before {
+            opacity: 1;
+        }
+        
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: var(--white);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 2;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .video-card:hover .duration {
+            opacity: 1;
+        }
+        
+        .video-info {
+            display: flex;
+            gap: 12px;
+            padding: 0 10px 10px;
+        }
+        
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--goyda-gradient);
+            flex-shrink: 0;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .video-card:hover .channel-icon {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        .video-details h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+        
+        .video-card:hover .video-details h3 {
+            color: var(--primary-color);
+        }
+        
+        .video-details p {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 3px;
+            transition: var(--transition);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: "ГОЙДА";
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            font-size: 100px;
+            font-weight: bold;
+            color: rgba(255, 0, 0, 0.05);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: var(--goyda-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select,
+        .modal-content button {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .modal-content input:focus,
+        .modal-content textarea:focus,
+        .modal-content select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+            outline: none;
+        }
+        
+        .modal-content button {
+            background: var(--goyda-gradient);
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 12px;
+            margin-top: 15px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content button:hover {
+            background: linear-gradient(45deg, #D52B1E, #0039A6, #ff0000);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-content button:active {
+            transform: translateY(0);
+        }
+        
+        .modal-content button::after {
+            content: "ГОЙДА!";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .modal-content button:hover::after {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            color: var(--text-medium);
+            z-index: 2;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+        
+        /* Каптча */
+        .captcha-container {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .captcha-container::before {
+            content: "ГОЙДА-каптча";
+            position: absolute;
+            top: -8px;
+            left: 10px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .captcha-code {
+            font-size: 24px;
+            letter-spacing: 3px;
+            margin: 10px 0;
+            user-select: none;
+            font-weight: bold;
+            color: var(--text-dark);
+            background: var(--white);
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            background: var(--goyda-gradient);
+            color: white;
+        }
+        
+        .captcha-btn {
+            background: var(--goyda-gradient);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+        
+        .captcha-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Плеер видео */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .video-modal.show {
+            opacity: 1;
+            display: block;
+        }
+        
+        .video-player-container {
+            width: 85%;
+            max-width: 1300px;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            margin: 30px auto;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .video-player-container::before {
+            content: "GOYDA TUBE";
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 72px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.03);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .video-modal.show .video-player-container {
+            transform: translateY(0);
+        }
+        
+        .close-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-container {
+            width: 100%;
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-info-container {
+            color: var(--white);
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .video-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            background: var(--goyda-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 15px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .video-actions {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: var(--bg-medium);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn:hover {
+            background: var(--bg-medium);
+            transform: translateY(-2px);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .action-btn.active {
+            background: var(--primary-color);
+        }
+        
+        .action-btn i {
+            font-size: 16px;
+        }
+        
+        .action-btn.active::after {
+            content: "ГОЙДА!";
+            position: absolute;
+            right: -25px;
+            font-size: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn.active:hover::after {
+            right: 5px;
+            opacity: 1;
+        }
+        
+        .comments-section {
+            margin-top: 30px;
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .comments-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comments-title::after {
+            content: "ГОЙДА-комментарии";
+            font-size: 12px;
+            background: var(--primary-color);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .comment-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border-radius: 20px;
+            border: none;
+            background: var(--bg-medium);
+            color: var(--white);
+            transition: var(--transition);
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        .comment-submit {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .comment-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .comment-submit:active {
+            transform: translateY(0);
+        }
+        
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .comments-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .comments-list::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .comment {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--bg-medium);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .comment:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .comment::before {
+            content: "ГОЙДА";
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .comment:hover::before {
+            opacity: 1;
+        }
+        
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--goyda-gradient);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+        }
+        
+        .comment-content {
+            flex-grow: 1;
+        }
+        
+        .comment-author {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+        
+        .comment-text {
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 1100;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            font-size: 20px;
+        }
+        
+        .notification::after {
+            content: "ГОЙДА!";
+            position: absolute;
+            bottom: -8px;
+            right: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            background: black;
+            color: white;
+            padding: 1px 5px;
+            border-radius: 10px;
+        }
+        
+        /* Футер */
+        footer {
+            background: var(--goyda-gradient);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+            transform: translateY(-2px);
+        }
+        
+        .footer-copyright {
+            margin-top: 10px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease forwards;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .video-player-container {
+                width: 95%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .video-player-container {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            
+            .video-title {
+                font-size: 20px;
+            }
+            
+            .search-bar {
+                flex-grow: 1;
+                margin: 0 10px;
+            }
+            
+            .main-content::before {
+                font-size: 48px;
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .search-bar {
+                display: none;
+            }
+            
+            .user-actions i:not(#userAvatar) {
+                display: none;
+            }
+            
+            .video-player-container {
+                width: 100%;
+                border-radius: 0;
+                padding: 10px;
+            }
+            
+            .video-actions {
+                flex-wrap: wrap;
+            }
+            
+            .action-btn {
+                flex-grow: 1;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px 15px;
+            }
+            
+            .comment-form {
+                flex-direction: column;
+            }
+            
+            .comment-submit {
+                width: 100%;
+            }
+            
+            .main-content::before {
+                font-size: 36px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        /* Темная тема */
+        .dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--white);
+        }
+        
+        .dark-mode header {
+            background-color: var(--bg-medium);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode .logo span {
+            color: var(--white);
+        }
+        
+        .dark-mode .sidebar {
+            background-color: var(--bg-medium);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark-mode .sidebar-item {
+            color: var(--white);
+        }
+        
+        .dark-mode .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark-mode .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark-mode .sidebar-item i {
+            color: var(--white);
+        }
+        
+        .dark-mode .sidebar h4 {
+            color: var(--text-light);
+        }
+        
+        .dark-mode .main-content {
+            background-color: var(--bg-dark);
+        }
+        
+        .dark-mode .main-content::before {
+            color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .dark-mode .category {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+        
+        .dark-mode .category:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark-mode .category.active {
+            background: var(--goyda-gradient);
+            color: var(--white);
+        }
+        
+        .dark-mode .video-details h3 {
+            color: var(--white);
+        }
+        
+        .dark-mode .video-details p {
+            color: var(--text-light);
+        }
+        
+        .dark-mode .video-card {
+            background: var(--bg-medium);
+        }
+        
+        .dark-mode .modal-content {
+            background-color: var(--bg-medium);
+            color: var(--white);
+        }
+        
+        .dark-mode .modal-content input,
+        .dark-mode .modal-content textarea,
+        .dark-mode .modal-content select {
+            background-color: var(--bg-dark);
+            color: var(--white);
+            border-color: var(--bg-medium);
+        }
+        
+        .dark-mode .captcha-container {
+            background-color: var(--bg-dark);
+        }
+        
+        .dark-mode .captcha-code {
+            background-color: var(--bg-medium);
+            color: var(--white);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="logo" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+            <div class="logo-icon"></div>
+            <span>Goyda Tube</span>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" placeholder="Гойда-поиск...">
+            <button><i class="fas fa-search"></i></button>
+            <div class="goyda-badge">ГОЙДА</div>
+        </div>
+        
+        <div class="user-actions">
+            <i class="fas fa-plus-circle" id="addVideoBtn" title="Добавить ГОЙДА-видео"></i>
+            <i class="fas fa-moon" id="themeToggle" title="ГОЙДА-тема"></i>
+            <img src="https://via.placeholder.com/32" alt="Аватар" class="user-avatar" id="userAvatar" title="ГОЙДА-профиль">
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Боковая панель -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-item active" data-section="main">
+                <i class="fas fa-home"></i>
+                <span>Гойда-главная</span>
+            </div>
+            <div class="sidebar-item" data-section="trending">
+                <i class="fas fa-fire"></i>
+                <span>Гойда-тренды</span>
+            </div>
+            <div class="sidebar-item" data-section="history">
+                <i class="fas fa-history"></i>
+                <span>Гойда-история</span>
+            </div>
+            
+            <hr>
+            
+            <h4>ГОЙДА-КАТЕГОРИИ</h4>
+            <div class="sidebar-item" data-category="Музыка">
+                <i class="fas fa-music"></i>
+                <span>Гойда-музыка</span>
+            </div>
+            <div class="sidebar-item" data-category="Игры">
+                <i class="fas fa-gamepad"></i>
+                <span>Гойда-игры</span>
+            </div>
+            <div class="sidebar-item" data-category="Новости">
+                <i class="fas fa-newspaper"></i>
+                <span>Гойда-новости</span>
+            </div>
+            <div class="sidebar-item" data-category="Спорт">
+                <i class="fas fa-trophy"></i>
+                <span>Гойда-спорт</span>
+            </div>
+            <div class="sidebar-item" data-category="Технологии">
+                <i class="fas fa-laptop-code"></i>
+                <span>Гойда-технологии</span>
+            </div>
+            <div class="sidebar-item" data-category="Кулинария">
+                <i class="fas fa-utensils"></i>
+                <span>Гойда-кулинария</span>
+            </div>
+        </aside>
+        
+        <!-- Основная область с видео -->
+        <main class="main-content">
+            <div class="categories">
+                <div class="category active" data-category="all">Все ГОЙДА</div>
+                <div class="category" data-category="Музыка">ГОЙДА-музыка</div>
+                <div class="category" data-category="Игры">ГОЙДА-игры</div>
+                <div class="category" data-category="Новости">ГОЙДА-новости</div>
+                <div class="category" data-category="Спорт">ГОЙДА-спорт</div>
+                <div class="category" data-category="Обучение">ГОЙДА-обучение</div>
+            </div>
+            
+            <!-- Каптча -->
+            <div class="captcha-container" id="captchaContainer" style="display: none;">
+                <p>Подтвердите, что вы не робот:</p>
+                <div class="captcha-code" id="captchaCode">ГОЙДА</div>
+                <button class="captcha-btn" id="verifyCaptchaBtn">Я не робот</button>
+            </div>
+            
+            <div class="videos-grid" id="videosGrid">
+                <!-- Видео будут загружаться здесь автоматически -->
+            </div>
+        </main>
+    </div>
+    
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="mailto:justananimate@gmail.com">Контакт: justananimate@gmail.com</a>
+                <span>|</span>
+                <span>Создано пользователем Griboed Animations</span>
+                <span>|</span>
+                <span>При поддержке сообщества "И.Н.М.Т."</span>
+            </div>
+            <div>
+                Сайт бы не существовал без Ивана Охлобыстина - человека, который сказал слово "Гойда!"
+            </div>
+            <div class="footer-copyright">
+                Все права зарегистрированы, любое стороннее вмешательство в систему влечет за собой последствия, 2025
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Модальное окно добавления видео -->
+    <div id="addVideoModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2>Добавить ГОЙДА-видео</h2>
+            <form id="videoForm">
+                <input type="text" id="youtubeUrl" placeholder="Ссылка на YouTube (например: https://youtu.be/dQw4w9WgXcQ)" required>
+                <input type="text" id="videoTitle" placeholder="Название ГОЙДА-видео" required>
+                <select id="videoCategory">
+                    <option value="Музыка">ГОЙДА-музыка</option>
+                    <option value="Игры">ГОЙДА-игры</option>
+                    <option value="Новости">ГОЙДА-новости</option>
+                    <option value="Спорт">ГОЙДА-спорт</option>
+                    <option value="Обучение">ГОЙДА-обучение</option>
+                    <option value="Разное">ГОЙДА-разное</option>
+                </select>
+                
+                <button type="submit">Добавить ГОЙДА!</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Модальное окно просмотра видео -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-player-container">
+            <button class="close-btn" onclick="closeVideo()">
+                <i class="fas fa-arrow-left"></i> ГОЙДА-назад
+            </button>
+            
+            <div class="video-container">
+                <iframe id="videoFrame" allowfullscreen></iframe>
+            </div>
+            
+            <div class="video-info-container">
+                <h1 class="video-title" id="videoTitle"></h1>
+                <div class="video-stats">
+                    <span id="videoViews">0 ГОЙДА-просмотров</span>
+                    <span id="videoDate">сегодня</span>
+                </div>
+                
+                <div class="video-actions">
+                    <button class="action-btn" id="likeBtn">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span id="likeCount">0</span>
+                    </button>
+                    <button class="action-btn" id="dislikeBtn">
+                        <i class="fas fa-thumbs-down"></i>
+                        <span id="dislikeCount">0</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="comments-section">
+                <h2 class="comments-title">
+                    <i class="fas fa-comments"></i> ГОЙДА-комментарии
+                    <span id="commentsCount">(0)</span>
+                </h2>
+                
+                <form class="comment-form" id="commentForm">
+                    <input type="text" class="comment-input" id="commentInput" placeholder="Добавьте ГОЙДА-комментарий..." required>
+                    <button type="submit" class="comment-submit">ГОЙДА-отправить</button>
+                </form>
+                
+                <div class="comments-list" id="commentsList">
+                    <!-- Комментарии будут загружаться здесь -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомление -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">ГОЙДА-уведомление</span>
+    </div>
+
+    <!-- Firebase и основной JavaScript -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { 
+            getDatabase, ref, push, onValue, query, orderByChild, 
+            update, remove, limitToLast, get, equalTo, set 
+        } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { 
+            getAuth, onAuthStateChanged, signOut
+        } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+        // Конфигурация Firebase (замените на свою)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtpdq-2uCEKsuuDBFkpcqdOhg7aWZdwfQ",
+            authDomain: "goydatube-fb36b.firebaseapp.com",
+            databaseURL: "https://goydatube-fb36b-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "goydatube-fb36b",
+            storageBucket: "goydatube-fb36b.appspot.com",
+            messagingSenderId: "700564088586",
+            appId: "1:700564088586:web:e9c504677301afa7497cf3",
+            measurementId: "G-Q26DESSV9S"
+        };
+
+        // Инициализация Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Глобальные переменные
+        let currentUser = null;
+        let currentVideoId = null;
+        let currentVideoKey = null;
+        let currentSection = 'main'; // 'main', 'trending', 'history'
+        let captchaVerified = false;
+
+        // Показ уведомления
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.style.backgroundColor = isSuccess ? '#4CAF50' : '#F44336';
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Проверка каптчи
+        function verifyCaptcha() {
+            document.getElementById('captchaContainer').style.display = 'none';
+            captchaVerified = true;
+            showNotification('ГОЙДА-каптча пройдена!');
+            loadVideos();
+        }
+
+        // Проверка дубликатов видео
+        async function checkVideoDuplicate(title) {
+            const videosRef = ref(database, 'videos');
+            const snapshot = await get(query(videosRef, orderByChild('title')));
+            
+            if (snapshot.exists()) {
+                const videos = snapshot.val();
+                for (const key in videos) {
+                    if (videos[key].title.toLowerCase() === title.toLowerCase()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Удаление старых видео при достижении лимита (100)
+        async function enforceVideoLimit() {
+            const videosRef = ref(database, 'videos');
+            const snapshot = await get(query(videosRef, orderByChild('timestamp')));
+            
+            if (snapshot.size() >= 100) {
+                const videos = snapshot.val();
+                const oldestVideoKey = Object.keys(videos)[0];
+                await remove(ref(database, `videos/${oldestVideoKey}`));
+            }
+        }
+
+        // Добавление видео
+        async function addVideo(e) {
+            e.preventDefault();
+            
+            if (!captchaVerified) {
+                showNotification('Пройдите ГОЙДА-каптчу сначала!', false);
+                document.getElementById('captchaContainer').style.display = 'block';
+                return;
+            }
+            
+            const youtubeUrl = document.getElementById('youtubeUrl').value;
+            const videoId = getYouTubeId(youtubeUrl);
+            
+            if (!videoId) {
+                showNotification('Некорректная ГОЙДА-ссылка на YouTube видео', false);
+                return;
+            }
+            
+            const title = document.getElementById('videoTitle').value.trim();
+            const category = document.getElementById('videoCategory').value.replace('ГОЙДА-', '');
+            
+            // Проверка дубликатов
+            if (await checkVideoDuplicate(title)) {
+                showNotification('ГОЙДА-видео с таким названием уже существует!', false);
+                return;
+            }
+            
+            const videoData = {
+                title: title,
+                category: category,
+                youtubeId: videoId,
+                views: 0,
+                likes: 0,
+                dislikes: 0,
+                authorId: 'anonymous',
+                authorName: 'Анонимный ГОЙДА-пользователь',
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString('ru-RU')
+            };
+            
+            try {
+                // Добавляем видео
+                await push(ref(database, 'videos'), videoData);
+                
+                // Проверяем лимит видео
+                await enforceVideoLimit();
+                
+                closeModal();
+                document.getElementById('videoForm').reset();
+                
+                showNotification('ГОЙДА-видео успешно добавлено!');
+                
+                // Обновляем список видео
+                loadVideos();
+            } catch (error) {
+                console.error("Ошибка при добавлении видео:", error);
+                showNotification('ГОЙДА-ошибка при добавлении видео', false);
+            }
+        }
+
+        // Извлечение ID видео из YouTube URL
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Форматирование числа (1000 -> 1K)
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        // Загрузка видео
+        function loadVideos(category = null) {
+            if (!captchaVerified && currentSection === 'main') {
+                document.getElementById('captchaContainer').style.display = 'block';
+                document.getElementById('videosGrid').innerHTML = '';
+                return;
+            }
+            
+            let videosQuery;
+            
+            if (currentSection === 'trending') {
+                videosQuery = query(
+                    ref(database, 'videos'),
+                    orderByChild('views'),
+                    limitToLast(20)
+                );
+            } else if (currentSection === 'history' && currentUser) {
+                // Для истории сначала получаем список просмотренных видео
+                loadUserHistory();
+                return;
+            } else {
+                if (category && category !== 'all') {
+                    videosQuery = query(
+                        ref(database, 'videos'),
+                        orderByChild('category'),
+                        equalTo(category.replace('ГОЙДА-', ''))
+                    );
+                } else {
+                    videosQuery = query(
+                        ref(database, 'videos'),
+                        orderByChild('timestamp')
+                    );
+                }
+            }
+            
+            onValue(videosQuery, (snapshot) => {
+                const videosGrid = document.getElementById('videosGrid');
+                videosGrid.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    videosGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-medium);">ГОЙДА-видео не найдены</p>';
+                    return;
+                }
+                
+                // Преобразуем в массив и сортируем
+                let videos = [];
+                snapshot.forEach((child) => {
+                    videos.push({
+                        key: child.key,
+                        ...child.val()
+                    });
+                });
+                
+                // Для главной страницы сортируем по дате (новые сначала)
+                if (currentSection === 'main') {
+                    videos.sort((a, b) => b.timestamp - a.timestamp);
+                }
+                // Для трендов сортируем по просмотрам
+                else if (currentSection === 'trending') {
+                    videos.sort((a, b) => b.views - a.views);
+                }
+                
+                // Отображаем видео
+                videos.forEach((video, index) => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card slide-up';
+                    videoCard.style.animationDelay = `${index * 0.1}s`;
+                    videoCard.onclick = () => openVideoPlayer(
+                        video.key,
+                        video.youtubeId,
+                        video.title,
+                        video.authorName,
+                        video.views,
+                        video.likes,
+                        video.dislikes,
+                        video.category,
+                        video.date
+                    );
+                    
+                    // Создаем инициалы для аватара канала
+                    const initials = video.authorName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    videoCard.innerHTML = `
+                        <div class="thumbnail">
+                            <img src="https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg" alt="${video.title}">
+                            <span class="duration">0:00</span>
+                        </div>
+                        <div class="video-info">
+                            <div class="channel-icon">${initials}</div>
+                            <div class="video-details">
+                                <h3>${video.title}</h3>
+                                <p>${video.authorName}</p>
+                                <p>${formatNumber(video.views)} ГОЙДА-просмотров • ${formatNumber(video.likes)} <i class="fas fa-thumbs-up"></i></p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    videosGrid.appendChild(videoCard);
+                });
+            });
+        }
+
+        // Загрузка истории просмотров пользователя
+        function loadUserHistory() {
+            if (!currentUser) return;
+            
+            const historyRef = query(
+                ref(database, `history/${currentUser.uid}`),
+                orderByChild('timestamp'),
+                limitToLast(20)
+            );
+            
+            onValue(historyRef, async (snapshot) => {
+                const videosGrid = document.getElementById('videosGrid');
+                videosGrid.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    videosGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-medium);">Вы еще не смотрели ГОЙДА-видео</p>';
+                    return;
+                }
+                
+                // Получаем список просмотренных видео (от новых к старым)
+                const historyItems = [];
+                snapshot.forEach((child) => {
+                    historyItems.unshift(child.val()); // Добавляем в начало массива
+                });
+                
+                // Получаем данные для каждого видео
+                for (const item of historyItems) {
+                    const videoSnapshot = await get(ref(database, `videos/${item.videoId}`));
+                    if (videoSnapshot.exists()) {
+                        const video = videoSnapshot.val();
+                        const videoCard = document.createElement('div');
+                        videoCard.className = 'video-card';
+                        videoCard.onclick = () => openVideoPlayer(
+                            item.videoId,
+                            video.youtubeId,
+                            video.title,
+                            video.authorName,
+                            video.views,
+                            video.likes,
+                            video.dislikes,
+                            video.category,
+                            video.date
+                        );
+                        
+                        // Создаем инициалы для аватара канала
+                        const initials = video.authorName.split(' ').map(n => n[0]).join('').toUpperCase();
+                        
+                        videoCard.innerHTML = `
+                            <div class="thumbnail">
+                                <img src="https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg" alt="${video.title}">
+                                <span class="duration">0:00</span>
+                            </div>
+                            <div class="video-info">
+                                <div class="channel-icon">${initials}</div>
+                                <div class="video-details">
+                                    <h3>${video.title}</h3>
+                                    <p>${video.authorName}</p>
+                                    <p>${formatNumber(video.views)} ГОЙДА-просмотров • ${formatNumber(video.likes)} <i class="fas fa-thumbs-up"></i></p>
+                                    <p>Просмотрено: ${new Date(item.timestamp).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        videosGrid.appendChild(videoCard);
+                    }
+                }
+            });
+        }
+
+        // Открытие плеера видео
+        async function openVideoPlayer(videoKey, videoId, title, author, views, likes, dislikes, category, date) {
+            currentVideoId = videoId;
+            currentVideoKey = videoKey;
+            
+            // Обновляем счетчик просмотров
+            await update(ref(database, `videos/${videoKey}`), {
+                views: views + 1
+            });
+            
+            // Добавляем в историю просмотров
+            if (currentUser) {
+                await push(ref(database, `history/${currentUser.uid}`), {
+                    videoId: videoKey,
+                    timestamp: Date.now()
+                });
+            }
+            
+            // Устанавливаем данные видео
+            document.getElementById('videoTitle').textContent = title;
+            document.getElementById('videoViews').textContent = `${formatNumber(views + 1)} ГОЙДА-просмотров`;
+            document.getElementById('videoDate').textContent = date;
+            
+            // Устанавливаем iframe
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
+            
+            // Загружаем реакции
+            loadReactions(videoKey, likes, dislikes);
+            
+            // Загружаем комментарии
+            loadComments(videoKey);
+            
+            // Показываем плеер с анимацией
+            const videoModal = document.getElementById('videoModal');
+            videoModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Загрузка реакций (лайки/дизлайки)
+        function loadReactions(videoKey, initialLikes = 0, initialDislikes = 0) {
+            // Устанавливаем начальные значения
+            document.getElementById('likeCount').textContent = formatNumber(initialLikes);
+            document.getElementById('dislikeCount').textContent = formatNumber(initialDislikes);
+            
+            // Загружаем общие счетчики
+            onValue(ref(database, `videos/${videoKey}/likes`), (snapshot) => {
+                const likes = snapshot.val() || 0;
+                document.getElementById('likeCount').textContent = formatNumber(likes);
+            });
+            
+            onValue(ref(database, `videos/${videoKey}/dislikes`), (snapshot) => {
+                const dislikes = snapshot.val() || 0;
+                document.getElementById('dislikeCount').textContent = formatNumber(dislikes);
+            });
+            
+            if (currentUser) {
+                // Проверяем реакцию пользователя
+                get(ref(database, `reactions/${videoKey}/${currentUser.uid}`)).then((snapshot) => {
+                    const likeBtn = document.getElementById('likeBtn');
+                    const dislikeBtn = document.getElementById('dislikeBtn');
+                    
+                    likeBtn.classList.remove('active');
+                    dislikeBtn.classList.remove('active');
+                    
+                    if (snapshot.exists()) {
+                        const reaction = snapshot.val().type;
+                        if (reaction === 'like') {
+                            likeBtn.classList.add('active');
+                        } else if (reaction === 'dislike') {
+                            dislikeBtn.classList.add('active');
+                        }
+                    }
+                });
+            }
+        }
+
+        // Обработка реакций
+        async function handleReaction(type) {
+            if (!currentUser) {
+                showNotification('Войдите, чтобы оценивать ГОЙДА-видео', false);
+                return;
+            }
+            
+            if (!currentVideoKey) return;
+            
+            const reactionRef = ref(database, `reactions/${currentVideoKey}/${currentUser.uid}`);
+            const videoRef = ref(database, `videos/${currentVideoKey}`);
+            
+            // Получаем текущие счетчики
+            const videoSnapshot = await get(videoRef);
+            const videoData = videoSnapshot.val();
+            const likes = videoData.likes || 0;
+            const dislikes = videoData.dislikes || 0;
+            
+            // Получаем текущую реакцию пользователя
+            const snapshot = await get(reactionRef);
+            const currentReaction = snapshot.exists() ? snapshot.val().type : null;
+            
+            // Обновляем счетчики видео
+            const updates = {};
+            
+            if (currentReaction === type) {
+                // Если пользователь повторно нажимает ту же реакцию - отменяем
+                await remove(reactionRef);
+                updates[`${type}s`] = (type === 'like' ? likes : dislikes) - 1;
+            } else {
+                // Если выбирает другую реакцию
+                if (currentReaction) {
+                    // Уменьшаем счетчик предыдущей реакции
+                    updates[`${currentReaction}s`] = (currentReaction === 'like' ? likes : dislikes) - 1;
+                }
+                
+                // Устанавливаем новую реакцию
+                await set(reactionRef, { type });
+                updates[`${type}s`] = (type === 'like' ? likes : dislikes) + 1;
+            }
+            
+            await update(videoRef, updates);
+        }
+
+        // Загрузка комментариев
+        function loadComments(videoKey) {
+            const commentsQuery = query(
+                ref(database, `comments/${videoKey}`),
+                orderByChild('timestamp')
+            );
+            
+            onValue(commentsQuery, (snapshot) => {
+                const commentsList = document.getElementById('commentsList');
+                commentsList.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    document.getElementById('commentsCount').textContent = '(0)';
+                    return;
+                }
+                
+                let commentsCount = 0;
+                const comments = [];
+                
+                snapshot.forEach((child) => {
+                    comments.push(child.val());
+                    commentsCount++;
+                });
+                
+                document.getElementById('commentsCount').textContent = `(${commentsCount})`;
+                
+                // Показываем комментарии (новые вверху)
+                comments.reverse().forEach((comment) => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    
+                    // Создаем инициалы для аватара
+                    const initials = comment.authorName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    commentElement.innerHTML = `
+                        <div class="comment-avatar">${initials}</div>
+                        <div class="comment-content">
+                            <div class="comment-author">${comment.authorName}</div>
+                            <div class="comment-text">${comment.text}</div>
+                        </div>
+                    `;
+                    
+                    commentsList.appendChild(commentElement);
+                });
+            });
+        }
+
+        // Добавление комментария
+        async function addComment(e) {
+            e.preventDefault();
+            
+            const commentInput = document.getElementById('commentInput');
+            const text = commentInput.value.trim();
+            
+            if (!text || !currentVideoKey) return;
+            
+            try {
+                await push(ref(database, `comments/${currentVideoKey}`), {
+                    text: text,
+                    authorId: 'anonymous',
+                    authorName: 'Анонимный ГОЙДА-пользователь',
+                    timestamp: Date.now()
+                });
+                
+                commentInput.value = '';
+                showNotification('ГОЙДА-комментарий добавлен');
+            } catch (error) {
+                console.error("Ошибка при добавлении комментария:", error);
+                showNotification('Не удалось добавить ГОЙДА-комментарий', false);
+            }
+        }
+
+        // Закрытие плеера видео
+        function closeVideo() {
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.src = '';
+            
+            const videoModal = document.getElementById('videoModal');
+            videoModal.classList.remove('show');
+            
+            setTimeout(() => {
+                videoModal.style.display = 'none';
+            }, 300);
+            
+            document.body.style.overflow = 'auto';
+            
+            currentVideoId = null;
+            currentVideoKey = null;
+        }
+
+        // Показ модального окна
+        function openModal() {
+            const modal = document.getElementById('addVideoModal');
+            modal.style.display = 'flex';
+            
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Закрытие модального окна
+        function closeModal() {
+            const modals = document.querySelectorAll('.modal');
+            
+            modals.forEach(modal => {
+                modal.classList.remove('show');
+                
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            });
+        }
+
+        // Выход
+        async function logout() {
+            try {
+                await signOut(auth);
+                showNotification('Вы успешно вышли из ГОЙДА-аккаунта');
+            } catch (error) {
+                console.error("Ошибка выхода:", error);
+                showNotification('Ошибка при ГОЙДА-выходе', false);
+            }
+        }
+
+        // Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeIcon = document.getElementById('themeToggle');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Переключение боковой панели
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Инициализация приложения
+        function init() {
+            // Проверка сохраненной темы
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').classList.remove('fa-moon');
+                document.getElementById('themeToggle').classList.add('fa-sun');
+            }
+            
+            // Проверка авторизации
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                
+                if (user) {
+                    // Пользователь авторизован
+                    document.getElementById('userAvatar').src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`;
+                    
+                    // Загружаем видео
+                    loadVideos();
+                } else {
+                    // Пользователь не авторизован
+                    document.getElementById('userAvatar').src = 'https://via.placeholder.com/32';
+                    
+                    // Показываем только публичные видео
+                    loadVideos();
+                }
+            });
+            
+            // Назначение обработчиков
+            document.getElementById('addVideoBtn').addEventListener('click', openModal);
+            document.getElementById('videoForm').addEventListener('submit', addVideo);
+            
+            document.getElementById('likeBtn').addEventListener('click', () => handleReaction('like'));
+            document.getElementById('dislikeBtn').addEventListener('click', () => handleReaction('dislike'));
+            document.getElementById('commentForm').addEventListener('submit', addComment);
+            document.getElementById('verifyCaptchaBtn').addEventListener('click', verifyCaptcha);
+            
+            document.getElementById('userAvatar').addEventListener('click', () => {
+                if (currentUser) {
+                    // Показываем меню пользователя
+                    if (confirm('Вы хотите выйти из ГОЙДА-аккаунта?')) {
+                        logout();
+                    }
+                } else {
+                    showNotification('Войдите, чтобы получить доступ ко всем ГОЙДА-функциям', false);
+                }
+            });
+            
+            // Обработчики категорий
+            document.querySelectorAll('.category').forEach(category => {
+                category.addEventListener('click', function() {
+                    document.querySelector('.category.active').classList.remove('active');
+                    this.classList.add('active');
+                    
+                    const categoryName = this.dataset.category === 'all' ? null : this.dataset.category;
+                    loadVideos(categoryName);
+                });
+            });
+            
+            // Обработчики бокового меню
+            document.querySelectorAll('.sidebar-item[data-section]').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelector('.sidebar-item.active').classList.remove('active');
+                    this.classList.add('active');
+                    
+                    currentSection = this.dataset.section;
+                    loadVideos();
+                });
+            });
+            
+            document.querySelectorAll('.sidebar-item[data-category]').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelector('.category.active').classList.remove('active');
+                    document.querySelector(`.category[data-category="${this.dataset.category}"]`).classList.add('active');
+                    
+                    loadVideos(this.dataset.category);
+                });
+            });
+            
+            // Переключение темы
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Закрытие модальных окон при клике вне их
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    closeModal();
+                }
+                if (e.target === document.getElementById('videoModal')) {
+                    closeVideo();
+                }
+            });
+            
+            // Загрузка начальных видео
+            loadVideos();
+        }
+
+        // Запуск приложения
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
